@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.libretadehimnos">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name="app.ejemplo.libretadehimnos.Splash"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="app.ejemplo.libretadehimnos.Motordebusqueda"
+            android:parentActivityName="app.ejemplo.libretadehimnos.Lista"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name="app.ejemplo.libretadehimnos.Mostrarhimno"
+            android:parentActivityName="app.ejemplo.libretadehimnos.Lista"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name="app.ejemplo.libretadehimnos.Reproductor"
+            android:parentActivityName="app.ejemplo.libretadehimnos.MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name="app.ejemplo.libretadehimnos.Lista"
+            android:label="Lista de Himnos"
+            android:parentActivityName="app.ejemplo.libretadehimnos.MainActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name="app.ejemplo.libretadehimnos.MainActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+        </activity>
+    </application>
+
+</manifest>
