@@ -26,13 +26,13 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
     private double starTime = 0;
     private double finalTime = 0;
     String him[] = {"ANGELES BLANCOS", "ALLA EN EL CIELO", "CONSEJO DIVINO", "CUANTO DOLOR", "DIVINO COMPAÑERO", "LUZ DE LA MAÑANA", "MUY PRONTO VENDRA", "REGRESA","UN DIA DE BODAS", "JUVENTUD", "YO SOLO ESPERO"};
-    int repetir = 0, posicion = 0;
+    int repetir = 0, posicion = 0,contp=0,conta=0,a=0,sound;
     public static int oneTimeOnly = 0;
 
     private final static String TAG = "MediaPlayer audios";
     private MediaPlayer mediaPlayer;
     private int[] sounds = {R.raw.angelesblancos, R.raw.allaenelcielo, R.raw.consejodivino,R.raw.cuantodolor,R.raw.divinocompanero,R.raw.luzdelamanana,R.raw.muyprontovendra,R.raw.regresa,R.raw.undiadebodas,R.raw.juventud,R.raw.yosoloespero};
-    private int sound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,19 +70,18 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (vectormp[posicion].isPlaying()) {
-                    vectormp[posicion].pause();
-                    mediaPlayer.stop();
-                    b1.setBackgroundResource(R.drawable.play);
-                    Toast.makeText(getApplication(), "PAUSA", Toast.LENGTH_SHORT).show();
-                }else if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    b1.setBackgroundResource(R.drawable.play);
-                    Toast.makeText(getApplication(), "PAUSA", Toast.LENGTH_SHORT).show();
-                }else {
-                    b1.setBackgroundResource(R.drawable.pausa);
-                    Toast.makeText(getApplication(), "PLAY", Toast.LENGTH_SHORT).show();
-                    vectormp[posicion].start();
+                if (conta==0){
+                    if (vectormp[posicion].isPlaying()) {
+                        vectormp[posicion].pause();
+                        b1.setBackgroundResource(R.drawable.play);
+                        contp=0;
+                        Toast.makeText(getApplication(), "PAUSA", Toast.LENGTH_SHORT).show();
+                    }else {
+                        vectormp[posicion].start();
+                        b1.setBackgroundResource(R.drawable.pausa);
+                        contp=1;
+                        Toast.makeText(getApplication(), "PLAY", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -113,11 +112,13 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
             public void onClick(View v) {
                 if (repetir == 1) {
                     Toast.makeText(getApplication(), "NO REPETIR", Toast.LENGTH_SHORT).show();
+                    b3.setBackgroundResource(R.drawable.repetir);
                     vectormp[posicion].setLooping(false);
                     repetir = 2;
                 } else {
                     b3.setBackgroundResource(R.drawable.norepetir);
                     Toast.makeText(getApplication(), "REPETIR", Toast.LENGTH_SHORT).show();
+                    b3.setBackgroundResource(R.drawable.norepetir);
                     vectormp[posicion].setLooping(true);
                     repetir = 1;
                 }
@@ -171,22 +172,26 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
         tod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (mediaPlayer.isPlaying()|| vectormp[posicion].isPlaying()){
-                    mediaPlayer.stop();
-                    vectormp[posicion].stop();
-                    b1.setBackgroundResource(R.drawable.play);
-                    Toast.makeText(getApplication(),"Ahora puedes presionar play",Toast.LENGTH_LONG).show();
-                }else if (mediaPlayer.isPlaying() && vectormp[posicion].isPlaying()){
-                    mediaPlayer.stop();
-                    vectormp[posicion].pause();
-                    b1.setBackgroundResource(R.drawable.play);
-                    Toast.makeText(getApplication(),"Ahora puedes presionar play",Toast.LENGTH_LONG).show();
-                }else {
-                    mediaPlayer.start();
-                    tex1.setText(him[posicion]);
-                    posicion++;
-                    Toast.makeText(getApplication(),"Se reproduciran todos los himnos",Toast.LENGTH_LONG).show();
+                if (contp==0){
+                    if (sounds.length > a){
+                        if (mediaPlayer.isPlaying()){
+                            mediaPlayer.stop();
+                            conta=0;
+                            Toast.makeText(getApplication(),"Stop ",Toast.LENGTH_SHORT).show();
+                        }else {
+                            mediaPlayer.start();
+                            tex1.setText(him[posicion]);
+                            conta=1;
+                            Toast.makeText(getApplication(),"Se reproducira todo",Toast.LENGTH_SHORT).show();
+                            a++;
+                        }
+                    } else {
+                        Toast.makeText(getApplication(),"Fin",Toast.LENGTH_SHORT).show();
+                        conta=0;
+                        mediaPlayer.stop();
+                    }
+                 }else {
+                    Toast.makeText(getApplication(),"Play",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -196,16 +201,15 @@ public class Reproductor extends AppCompatActivity implements MediaPlayer.OnComp
         sound++;
         if (sounds.length <= sound){
             //Termina reproducción de todos los audios.
-            tex1.setText(him[sound]);
             return;
         }
         AssetFileDescriptor afd = this.getResources().openRawResourceFd(sounds[sound]);
-
         try {
             mediaPlayer.reset();
             mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getDeclaredLength());
             mediaPlayer.prepare();
             mediaPlayer.start();
+            tex1.setText(him[sound]);
             afd.close();
         }
         catch (IllegalArgumentException e) {
